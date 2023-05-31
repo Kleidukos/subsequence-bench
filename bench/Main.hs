@@ -14,7 +14,7 @@ main = defaultMain
 sublistOfBenches :: [Int] -> [Benchmark]
 sublistOfBenches sizes =
   sizes >>= \size ->
-    let baselineName = "Hedgehog subsequence (native, " <> show size <> " items"
+    let baselineName = "Hedgehog subsequence, native, " <> show size <> " items"
      in [ bench baselineName
             . nfIO
             . Gen.sample

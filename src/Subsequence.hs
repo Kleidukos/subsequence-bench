@@ -1,6 +1,8 @@
+{-# OPTIONS_GHC -O2 #-}
+{-# LANGUAGE MultiWayIf #-}
 module Subsequence where
 
-import Data.Bits (FiniteBits (finiteBitSize))
+import Data.Bits (FiniteBits (finiteBitSize), countTrailingZeros, unsafeShiftR)
 import Data.Word (Word64)
 import Hedgehog
 import Hedgehog.Gen qualified as Gen
@@ -18,9 +20,9 @@ subsequence64 list = shrink Shrink.list $ case list of
     go rest !bitsLeft !encoding = case rest of
       [] -> pure []
       (x : xs) ->
-        if bitsLeft == 0
-          then Gen.word64 (Range.constant 0 10000) >>= go rest (finiteBitSize @Word64 undefined)
-          else
-            case encoding `quotRem` 2 of
-              (encoding', 0) -> go xs (bitsLeft - 1) encoding'
-              (encoding', _) -> (x :) <$> go xs (bitsLeft - 1) encoding'
+        let !shift = min bitsLeft (countTrailingZeros encoding) in
+          if | shift > 0 -> go (drop shift rest) (bitsLeft - shift) (encoding `unsafeShiftR` shift)
+             | bitsLeft == 0 -> 
+                 Gen.word64 (Range.constant 0 10000)
+                    >>= go rest (finiteBitSize @Word64 undefined)
+             | otherwise -> (x :) <$> go xs (bitsLeft - 1) (encoding `unsafeShiftR` 1)

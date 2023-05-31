@@ -1,4 +1,6 @@
+{-# OPTIONS_GHC -O2 #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiWayIf #-}
 module SublistOf where
 
 import Test.QuickCheck
@@ -19,9 +21,7 @@ sublistOf64 = \case
     go rest !bitsLeft !encoding = case rest of
       [] -> pure []
       (x : xs) ->
-        if bitsLeft == 0
-          then arbitrary >>= go rest (finiteBitSize @Word64 undefined)
-          else
-            case encoding `quotRem` 2 of
-              (encoding', 0) -> go xs (bitsLeft - 1) encoding'
-              (encoding', _) -> (x :) <$> go xs (bitsLeft - 1) encoding'
+        let !shift = min bitsLeft (countTrailingZeros encoding) in
+          if | shift > 0 -> go (drop shift rest) (bitsLeft - shift) (encoding `unsafeShiftR` shift)
+             | bitsLeft == 0 -> arbitrary >>= go rest (finiteBitSize @Word64 undefined)
+             | otherwise -> (x :) <$> go xs (bitsLeft - 1) (encoding `unsafeShiftR` 1)
