@@ -6,7 +6,6 @@ import Data.Kind
 import Data.Word (Word64)
 import Data.Bits hiding (shift)
 import Data.WideWord
-import GHC.Base (RuntimeRep(Word64Rep))
 
 sublistOf64 ::
   forall (a :: Type).

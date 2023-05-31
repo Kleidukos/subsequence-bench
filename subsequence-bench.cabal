@@ -17,7 +17,7 @@ extra-doc-files: CHANGELOG.md
 -- extra-source-files:
 
 common options
-  ghc-options: -Wall -with-rtsopts=-A32m -fproc-alignment=64
+  ghc-options: -O2 -Wall -with-rtsopts=-A32m -fproc-alignment=64
 
 library
   import:           options
