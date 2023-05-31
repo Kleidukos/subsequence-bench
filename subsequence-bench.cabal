@@ -17,18 +17,21 @@ extra-doc-files: CHANGELOG.md
 -- extra-source-files:
 
 common options
-  ghc-options: -O2 -Wall -with-rtsopts=-A32m -fproc-alignment=64
+  ghc-options:
+    -O2 -Wall -with-rtsopts=-A32m -fproc-alignment=64 -flate-specialise
+    -funbox-strict-fields -finline-generics-aggressively
+    -fexpose-all-unfoldings
 
 library
   import:           options
   exposed-modules:
-    Subsequence
     SublistOf
+    Subsequence
 
   -- other-modules:
   -- other-extensions:
   build-depends:
-    , base      ==4.17.1.0
+    , base        ==4.17.1.0
     , hedgehog
     , QuickCheck
     , wide-word
@@ -45,6 +48,7 @@ benchmark bench
   build-depends:
     , base               ==4.17.1.0
     , hedgehog
+    , QuickCheck
     , subsequence-bench
     , tasty-bench
-    , QuickCheck
+    , tasty

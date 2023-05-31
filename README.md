@@ -3,5 +3,5 @@
 run:
 
 ```
-$ cabal run all:benches
+$ cabal bench -O2 --benchmark-option=--stdev=1 --benchmark-option=--timeout=200
 ```
