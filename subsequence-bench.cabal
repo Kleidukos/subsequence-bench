@@ -1,0 +1,50 @@
+cabal-version:   3.4
+name:            subsequence-bench
+version:         0.1.0.0
+
+-- synopsis:
+-- description:
+license:         MIT
+license-file:    LICENSE
+
+-- author:
+-- maintainer:
+-- copyright:
+category:        Testing
+build-type:      Simple
+extra-doc-files: CHANGELOG.md
+
+-- extra-source-files:
+
+common options
+  ghc-options: -Wall -with-rtsopts=-A32m -fproc-alignment=64
+
+library
+  import:           options
+  exposed-modules:
+    Subsequence
+    SublistOf
+
+  -- other-modules:
+  -- other-extensions:
+  build-depends:
+    , base      ==4.17.1.0
+    , hedgehog
+    , QuickCheck
+    , wide-word
+
+  hs-source-dirs:   src
+  default-language: GHC2021
+
+benchmark bench
+  import:           options
+  default-language: GHC2021
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   bench
+  main-is:          Main.hs
+  build-depends:
+    , base               ==4.17.1.0
+    , hedgehog
+    , subsequence-bench
+    , tasty-bench
+    , QuickCheck
