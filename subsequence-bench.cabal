@@ -19,8 +19,6 @@ extra-doc-files: CHANGELOG.md
 common options
   ghc-options:
     -O2 -Wall -with-rtsopts=-A32m -fproc-alignment=64 -flate-specialise
-    -funbox-strict-fields -finline-generics-aggressively
-    -fexpose-all-unfoldings
 
 library
   import:           options
