@@ -14,7 +14,7 @@ subsequence64 :: (MonadGen m) => [a] -> m [a]
 subsequence64 list = shrink Shrink.list $ case list of
   [] -> pure []
   [x] -> Gen.element [[], [x]]
-  src -> Gen.word64 (Range.constant 0 10000) >>= go src (finiteBitSize @Word64 undefined)
+  src -> Gen.word64 (Range.constant minBound maxBound) >>= go src (finiteBitSize @Word64 undefined)
   where
     go :: (MonadGen m) => [a] -> Int -> Word64 -> m [a]
     go rest !bitsLeft !encoding = case rest of
@@ -23,6 +23,6 @@ subsequence64 list = shrink Shrink.list $ case list of
         let !shift = min bitsLeft (countTrailingZeros encoding) in
           if | shift > 0 -> go (drop shift rest) (bitsLeft - shift) (encoding `unsafeShiftR` shift)
              | bitsLeft == 0 -> 
-                 Gen.word64 (Range.constant 0 10000)
+                 Gen.word64 (Range.constant minBound maxBound)
                     >>= go rest (finiteBitSize @Word64 undefined)
              | otherwise -> (x :) <$> go xs (bitsLeft - 1) (encoding `unsafeShiftR` 1)
